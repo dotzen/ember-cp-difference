@@ -1,6 +1,6 @@
-# Ember-cp-difference
+# ember-cp-difference
 
-This README outlines the details of collaborating on this Ember addon.
+A computed property to calculate the difference between two properies.
 
 ## Installation
 
