@@ -56,3 +56,14 @@ test('Calculates the negative difference between two properties explicity', func
 
   assert.equal(subject.get('totalWithoutHats'), -80, 'Should calculate the negative difference between total and totalWithHats');
 });
+
+test('Calculates the difference between a property and number', function(assert) {
+  assert.expect(1);
+
+  let subject = createSubject({
+    total: 100,
+    totalWithoutHats: difference('total', 3)
+  });
+
+  assert.equal(subject.get('totalWithoutHats'), 97, 'Should calculate the difference between total and 3');
+});
