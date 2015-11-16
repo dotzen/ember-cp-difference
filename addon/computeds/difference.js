@@ -40,16 +40,20 @@ const { get } = Ember;
  */
 function difference(propertyKey1, propertyKey2, options = {}) {
   options = Ember.$.extend({}, { absolute: false }, options);
-  const args = [propertyKey1, propertyKey2];
+  let prop2IsNumeric = !isNaN(parseFloat(propertyKey2)) && isFinite(propertyKey2);
 
   Ember.assert('propertyKey1 is required for Ember.computed.difference', propertyKey1 && propertyKey1.length > 0);
-  Ember.assert('propertyKey2 is required for Ember.computed.difference', propertyKey2 && propertyKey2.length > 0);
+  Ember.assert('propertyKey2 is required for Ember.computed.difference', propertyKey2 && (propertyKey2.length > 0 || prop2IsNumeric));
 
-  let computed = Ember.computed(propertyKey1, propertyKey2, function() {
-    let diff = get(this, propertyKey1) - get(this, propertyKey2);
+  let differenceFunc = function() {
+    let otherVal = prop2IsNumeric ? propertyKey2 : get(this, propertyKey2);
+    let diff = get(this, propertyKey1) - otherVal;
 
     return options.absolute ?  Math.abs(diff) : diff;
-  });
+  };
+
+  let computed = prop2IsNumeric ? Ember.computed(propertyKey1, differenceFunc) : Ember.computed(propertyKey1, propertyKey2, differenceFunc);
+  const args = prop2IsNumeric ? [propertyKey1] : [propertyKey1, propertyKey2];
 
   return computed.property.apply(computed, args);
 }
